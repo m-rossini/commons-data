@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aggregation-config id="aggregation-config">
+
+   <!-- 
+         INVOICE Fact definition 
+    -->
+	<fact name="invoiceFact" class-name="br.com.auster.om.dynamic.InvoiceFact">
+	
+	  <!-- SOURCE ANCHOR DATA -->
+	  <source name="invoice">
+	     return invoice_list
+	  </source>
+	  
+	  <!-- FACT Attributes -->
+	  <attribute name="totalAmount" type="double">
+	     invoice.totalAmount
+	  </attribute>
+	  <attribute name="dueDate" type="java.util.Date">
+	     invoice.dueDate
+	  </attribute>
+	  
+	  <!-- Dimension definition -->
+	  <dimension name="cycleDimension" class-name="br.com.auster.om.dynamic.CycleDimension">
+	    <attribute name="cycleCode" type="java.lang.String" key="true">
+	      invoice.cycleCode
+	    </attribute>
+	    <attribute name="cutDate" type="java.util.Date" key="true">
+	      invoice.cycleEndDate
+	    </attribute>
+	    <attribute name="issueDate" type="java.util.Date">
+	      invoice.issueDate
+	    </attribute>
+	    <attribute name="dueDate" type="java.util.Date" key="true">
+	      invoice.dueDate
+	    </attribute>
+	  </dimension>
+	    
+	  <!-- Dimension Definition -->
+	  <dimension name="accountDimension" class-name="br.com.auster.om.dynamic.AccountDimension">
+	    <attribute name="accountType" type="java.lang.String"  key="true">
+	      invoice.account.accountType
+	    </attribute>
+	    <attribute name="accountNumber" type="java.lang.String"  key="true">
+	      invoice.account.accountNumber
+	    </attribute>
+	  </dimension>
+	  
+	  <!-- Dimension Definition -->
+	  <dimension name="timeDimension" class-name="br.com.auster.om.dynamic.TimeDimension">
+	    <attribute name="year" type="java.lang.String"  key="true">
+		  if (invoice.cycleStartDate == null) { return; }
+	      Calendar calendar = Calendar.getInstance()
+	      calendar.setTime(invoice.cycleStartDate)
+	      calendar.get(Calendar.YEAR)+""
+	    </attribute>
+	    <attribute name="month" type="java.lang.String"  key="true">
+		  if (invoice.cycleStartDate == null) { return; }
+	      Calendar calendar = Calendar.getInstance()
+	      calendar.setTime(invoice.cycleStartDate)
+	      (calendar.get(Calendar.MONTH)+1)+""
+	    </attribute>
+	    <attribute name="day" type="java.lang.String"  key="true">
+		  if (invoice.cycleStartDate == null) { return; }
+	      Calendar calendar = Calendar.getInstance()
+	      calendar.setTime(invoice.cycleStartDate)
+	      calendar.get(Calendar.DATE)+""
+	    </attribute>
+	  </dimension>
+					  
+	</fact>	
+	
+</aggregation-config>

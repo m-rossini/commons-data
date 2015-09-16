@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<saver-config>
+
+    <sql-data-saver-config id='invoice-fact-saver'> 
+		
+      <table name='ep_cycle_test' data-list='invoice-list' item-expression="cycle" mode="ignore" cache="2"> 
+        <id    name='objid'       type="long"                 generator-sql="select nextval('test_sequence')"/>
+        <field name='cycle_code'  type="java.lang.String"     value='cycleCode'             key="true"/> 
+        <field name='start_date'  type="java.util.Date"	      value='cycleStartDate'/> 
+        <field name='end_date'    type="java.util.Date"	      value='cycleEndDate'/> 
+      </table> 
+
+      <table name='ep_invoice_test' data-list='invoice-list' mode="update"> 
+        <foreign-key 
+			   name='cycle_id'           type="long"            			   value='cycle'             
+			   table='ep_cycle_test'     key='true'                            foreign-name='objid'/>
+		<field name='invoice_id'         type="java.lang.String"               value="invoiceId" key='true'/>
+        <field name='total_amount'       type="double"          			   value='totalAmount'/> 
+        <field name='dispute_amount'     type="double"          			   value='disputeAmount'/> 
+      </table> 
+      
+    </sql-data-saver-config>
+      
+</saver-config>
